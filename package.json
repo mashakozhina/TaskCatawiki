@@ -1,0 +1,51 @@
+{
+  "name": "playwright",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "axios": "^1.16.1",
+    "dotenv": "^17.4.2",
+    "playwright": "^1.59.1",
+    "playwright-core": "^1.59.1",
+    "undici-types": "^7.19.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/jest": "^29.5.14",
+    "@typescript-eslint/parser": "^8.59.3",
+    "eslint": "^10.3.0",
+    "eslint-plugin-playwright": "^2.10.2",
+    "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "jest-html-reporters": "^3.1.7",
+    "lint-staged": "^17.0.4",
+    "prettier": "^3.8.3",
+    "ts-jest": "^29.2.6",
+    "ts-node": "^10.9.2"
+  },
+  "scripts": {
+    "test": "npm run test:e2e && npm run test:api",
+    "pretest:e2e": "rm -rf playwright-report-*",
+    "test:e2e": "playwright test",
+    "pretest:api": "rm -rf jest-report-*",
+    "test:api": "jest --config=jest.config.ts",
+    "prepare": "husky",
+    "auth:save": "npx ts-node scripts/saveAuth.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mashakozhina/Playwright.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/mashakozhina/Playwright/issues"
+  },
+  "homepage": "https://github.com/mashakozhina/Playwright#readme"
+}

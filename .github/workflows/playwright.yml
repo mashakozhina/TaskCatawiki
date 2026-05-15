@@ -1,0 +1,99 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches-ignore: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      locale:
+        description: 'Locale used in URL paths (e.g. en, nl, fr, de)'
+        required: false
+        default: 'en'
+        type: choice
+        options: [en, nl, fr, de, es, it]
+      category_slug:
+        description: 'Category slug for category page tests'
+        required: false
+        default: '1-interiors-decorations'
+        type: string
+      auction_type_slug:
+        description: 'Auction type slug for auction page tests'
+        required: false
+        default: '99-marklin-h0-model-trains-a'
+        type: string
+
+jobs:
+  # jest-api-tests:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 20
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: lts/*
+  #     - name: Install dependencies
+  #       run: npm ci
+  #     - name: Run API tests
+  #       run: npm run test:api
+  #       env:
+  #         BASE_URL: ${{ vars.BASE_URL }}
+  #     - uses: actions/upload-artifact@v4
+  #       if: ${{ !cancelled() }}
+  #       with:
+  #         name: jest-api-test-report
+  #         path: jest-report-*/
+  #         retention-days: 30
+
+  api-tests:
+    if: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run API tests
+        run: npx playwright test --project=chrome tests/e2e-tests/API
+        env:
+          BASE_URL: ${{ vars.BASE_URL }}
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: api-test-report
+          path: playwright-report-*/
+          retention-days: 30
+
+  ui-tests:
+    if: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: api-tests 
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run UI tests
+        run: npx playwright test --project=chrome tests/e2e-tests/Smoke-UI tests/e2e-tests/Regression-UI
+        env:
+          BASE_URL: ${{ vars.BASE_URL }}
+          LOCALE: ${{ inputs.locale || vars.LOCALE || 'en' }}
+          CATEGORY_SLUG: ${{ inputs.category_slug || vars.CATEGORY_SLUG || '1-interiors-decorations' }}
+          AUCTION_TYPE_SLUG: ${{ inputs.auction_type_slug || vars.AUCTION_TYPE_SLUG || '99-marklin-h0-model-trains-a' }}
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: ui-test-report
+          path: playwright-report-*/
+          retention-days: 30

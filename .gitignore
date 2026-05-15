@@ -1,0 +1,12 @@
+node_modules/
+playwright-report/
+playwright-report-*/
+test-results/
+jest-report-*/
+.env
+.DS_Store
+auth.json
+.playwright-mcp/
+.playwright-cli/
+.claude/
+docs/
